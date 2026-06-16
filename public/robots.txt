@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /report
+Allow: /docs
+
+Sitemap: https://market-orca.anomali.web.id/sitemap.xml

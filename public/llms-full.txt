@@ -1,0 +1,68 @@
+# Market Orca - Financial News & Market Intelligence
+
+## Overview
+Market Orca is a free real-time financial news aggregator and AI-powered market intelligence platform. It covers Indonesia stocks (IHSG/IDX/BEI), forex, and cryptocurrency.
+
+## Key Features
+- Real-time news aggregation from trusted Indonesian sources
+- IHSG (JCI) stock market data and analysis
+- Forex rate tracking (USD/IDR, EUR/IDR, GBP/IDR)
+- AI-powered market intelligence (MCP server)
+- Color-coded news tags: 🔴 Red Flag, 🟢 Worth Knowing, 🟡 Model Wars, 🔵 Breaking
+
+## API Endpoints
+
+### Market Data
+- **GET /api/overview** - Get overall market overview data
+  - Response: JSON with market summary, indices, top movers
+- **GET /api/stock/{symbol}** - Get individual stock data
+  - Parameters: `{symbol}` - Stock symbol (e.g., BBCA.JK, AAPL)
+  - Response: JSON with price, change, history, news
+- **GET /api/news** - Get latest financial news feed
+  - Query params: `limit` (default 20), `offset` (default 0), `tag` (red, green, yellow, blue)
+  - Response: JSON array of news articles with title, source, url, summary, tag, timestamp
+- **GET /api/news/enrich** - Get enriched news with sentiment analysis
+  - Query params: `limit` (default 20)
+  - Response: JSON array with sentiment scores and summaries
+- **GET /api/reports** - Get list of available AI reports
+  - Response: JSON array of report slugs/metadata
+- **GET /api/report/{slug}** - Get specific AI report
+  - Response: JSON with full report content
+
+### Health & Status
+- **GET /health** - Service health check
+  - Response: JSON `{status: "ok", timestamp, uptime, dbSize, version}`
+
+## MCP Server (Model Context Protocol)
+- **Endpoint**: https://mcp.anomali.web.id/
+- **Protocol**: Model Context Protocol (MCP) StreamableHTTP
+- **Auth**: Bearer token required
+- **Tools available**: market overview, stock data, news feed, AI reports, RAG search, web search, alert management, watchlist management
+
+## Search
+- **Search engine**: https://searxng.anomali.web.id/
+- **Instance name**: AROXNG
+- Supports: general web search, news search, file search, science, maps, images, videos, music, IT, social media
+
+## Additional Endpoints (Internal)
+- **GET /api/assets** - List all tracked assets
+- **GET /api/assets/{slug}** - Get specific asset details
+- **GET /api/watchlist** - Get user watchlist (auth required)
+- **POST /api/watchlist** - Add to watchlist (auth required)
+- **DELETE /api/watchlist/{id}** - Remove from watchlist (auth required)
+- **GET /api/alerts** - Get configured alerts
+- **POST /api/alerts** - Create alert (auth required)
+- **GET /api/discord-settings** - Get Discord bot settings (auth required)
+- **GET /api/report-preferences** - Get user report preferences (auth required)
+
+## Tech Stack
+- Frontend: Vue 3.5 + Vite 7.1
+- Backend: Node.js + Express (ESM)
+- Database: SQLite (WAL mode)
+- Authentication: Session-based
+- Hosting: anomali.web.id domains
+
+## Contact & Support
+- Dashboard: https://market-orca.anomali.web.id
+- Report: https://report.anomali.web.id
+- Domain: anomali.web.id

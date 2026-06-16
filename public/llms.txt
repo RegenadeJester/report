@@ -1,0 +1,30 @@
+# Market Orca - Financial News & Market Intelligence
+
+## What is Market Orca?
+Market Orca is a free real-time financial news aggregator and AI-powered market intelligence platform. It covers Indonesia stocks (IHSG/IDX/BEI), forex, and cryptocurrency.
+
+## Key Features
+- Real-time news aggregation from trusted Indonesian sources
+- IHSG (JCI) stock market data and analysis
+- Forex rate tracking (USD/IDR, EUR/IDR, GBP/IDR)
+- AI-powered market intelligence (MCP server)
+- Color-coded news tags: 🔴 Red Flag, 🟢 Worth Knowing, 🟡 Model Wars, 🔵 Breaking
+
+## API Access
+- Market data: https://market-orca.anomali.web.id/api/overview
+- Stock data: https://market-orca.anomali.web.id/api/stock/{symbol}
+- News feed: https://market-orca.anomali.web.id/api/news
+- Health check: https://market-orca.anomali.web.id/health
+
+## MCP Server
+- Endpoint: https://mcp.anomali.web.id/
+- Protocol: Model Context Protocol (MCP)
+- Auth: Bearer token required
+
+## Search
+- Search engine: https://searxng.anomali.web.id/
+- Instance name: AROXNG
+
+## Contact
+- Domain: anomali.web.id
+- Dashboard: https://market-orca.anomali.web.id
