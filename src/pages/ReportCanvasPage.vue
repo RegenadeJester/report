@@ -8,6 +8,27 @@
       <span class="progress-label">{{ progressPct }}% · {{ filledSections }}/{{ state.sections.length }} sections</span>
     </div>
 
+    <!-- Market Overview Bar -->
+    <div class="market-overview-bar" v-if="marketData.length" @click="showMarketOverview = !showMarketOverview">
+      <div class="market-bar-label">📊 Market <span class="market-toggle">{{ showMarketOverview ? '▾' : '▸' }}</span></div>
+      <div class="market-bar-compact" v-if="!showMarketOverview">
+        <span v-for="m in marketData.slice(0, 6)" :key="m.slug" :class="['mkt-chip', Number(m.change_percent) >= 0 ? 'up' : 'down']">
+          {{ m.symbol }} {{ formatPrice(m.price) }} ({{ Number(m.change_percent) >= 0 ? '+' : '' }}{{ m.change_percent }}%)
+        </span>
+      </div>
+    </div>
+    <div v-if="showMarketOverview && marketData.length" class="market-overview-expanded">
+      <div class="market-grid">
+        <div v-for="m in marketData" :key="m.slug" class="market-card-mini">
+          <div class="mc-name">{{ m.symbol }}</div>
+          <div class="mc-price">{{ formatPrice(m.price) }}</div>
+          <div :class="['mc-change', Number(m.change_percent) >= 0 ? 'up' : 'down']">
+            {{ Number(m.change_percent) >= 0 ? '+' : '' }}{{ m.change_percent }}%
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Top bar -->
     <div class="canvas-top">
       <div>
@@ -230,6 +251,28 @@ const formats = [
   { key: 'json', icon: '📊', label: 'JSON', desc: 'Raw data' },
   { key: 'pdf', icon: '📄', label: 'PDF', desc: 'Print-to-PDF' },
 ]
+
+// Market overview
+const marketData = ref([])
+const showMarketOverview = ref(false)
+
+function formatPrice(p) {
+  const n = Number(p)
+  if (!n || n === 0) return '-'
+  if (n > 100000) return n.toLocaleString('id-ID', { maximumFractionDigits: 0 })
+  if (n > 100) return n.toLocaleString('id-ID', { maximumFractionDigits: 1 })
+  return n.toLocaleString('id-ID', { maximumFractionDigits: 4 })
+}
+
+async function loadMarketData() {
+  try {
+    const res = await fetch('/api/overview')
+    const data = await res.json()
+    const targetSlugs = ['jkse','usdidr','btcusdt','ethusdt','spy','qqq','xauusd','eurusd','gbpusd','sgdidr','myridr']
+    marketData.value = (data.assets || []).filter(a => targetSlugs.includes(a.slug))
+      .sort((a, b) => targetSlugs.indexOf(a.slug) - targetSlugs.indexOf(b.slug))
+  } catch {}
+}
 
 // ── Computed ─────────────────────────────────────────────────
 const hiddenCount = computed(() => state.sections.filter(s => s.hidden).length)
@@ -757,6 +800,7 @@ onMounted(async () => {
     document.title = `Canvas ${state.title} · Market Orca`
     await nextTick()
     renderAllSparklines()
+    loadMarketData()
   } catch (e) {
     state.error = e.message
   }
@@ -1244,6 +1288,24 @@ watch(
   .sec-sparkline { height: 60px; }
   .sec-toolbar { top: -12px; right: 8px; }
 }
+
+/* ── Market Overview Bar ───────────────────────────────── */
+.market-overview-bar{cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:0 16px 12px;display:flex;align-items:center;gap:12px;transition:background .2s}
+.market-overview-bar:hover{background:var(--panel2)}
+.market-bar-label{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+.market-toggle{font-size:10px;margin-left:4px}
+.market-bar-compact{display:flex;flex-wrap:wrap;gap:6px;overflow:hidden}
+.mkt-chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;white-space:nowrap}
+.mkt-chip.up{color:#22c55e;background:rgba(34,197,94,.1)}
+.mkt-chip.down{color:#ef4444;background:rgba(239,68,68,.1)}
+.market-overview-expanded{margin:0 16px 12px}
+.market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.market-card-mini{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+.mc-name{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.mc-price{font-size:13px;font-weight:800;color:var(--ink)}
+.mc-change{font-size:11px;font-weight:700;margin-top:2px}
+.mc-change.up{color:#22c55e}
+.mc-change.down{color:#ef4444}
 </style>
 
 <!-- Unscoped print styles -->
@@ -1254,7 +1316,7 @@ watch(
   .canvas-shell { max-width: 100% !important; padding: 0 !important; }
   .progress-wrap, .top-actions, .sec-toolbar, .btn,
   .hidden-bar, .toast, .modal-overlay, .drag-handle,
-  .tb-btn, .nav-link, .auto-badge { display: none !important; }
+  .tb-btn, .nav-link, .auto-badge, .market-overview-bar, .market-overview-expanded { display: none !important; }
   .sec-card { break-inside: avoid; border: 1px solid #ccc !important; box-shadow: none !important; padding: 12px !important; }
   .sec-card.active { box-shadow: none !important; }
   .sec-card.hidden { opacity: 1 !important; }

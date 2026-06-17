@@ -102,6 +102,8 @@ watch(theme, applyTheme)
         <RouterLink to="/delivery" @click="menuOpen=false">{{ t('nav.pengiriman') }}</RouterLink>
         <RouterLink to="/report-preferences" @click="menuOpen=false">{{ t('nav.preferensi') }}</RouterLink>
         <RouterLink to="/rag-report" @click="menuOpen=false">{{ t('nav.rag') }}</RouterLink>
+        <RouterLink to="/tradingview" @click="menuOpen=false">TradingView</RouterLink>
+        <RouterLink to="/indonesia" @click="menuOpen=false">🇮🇩 Indonesia</RouterLink>
         <RouterLink to="/profile" @click="menuOpen=false">{{ t('nav.profile') }}</RouterLink>
         <a :href="latestReport ? `/report/${latestReport}` : '/report'" @click="menuOpen=false">{{ t('nav.laporan') }}</a>
         <RouterLink to="/terminal" @click="menuOpen=false">{{ t('nav.terminal') }}</RouterLink>

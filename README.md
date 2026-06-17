@@ -47,20 +47,33 @@ frontend/
 │   │   ├── HomePage.vue              # News feed + overview
 │   │   ├── AssetPage.vue             # Asset detail + chart
 │   │   ├── ReportPage.vue            # Daily report viewer
+│   │   ├── ReportCanvasPage.vue      # Canvas-style report layout
 │   │   ├── ReportEditorPage.vue      # Report block editor
 │   │   ├── ReportPreferencesPage.vue # Report config
 │   │   ├── TerminalPage.vue          # CLI-like interface
+│   │   ├── TradingViewPage.vue       # TradingView embedded charts
 │   │   ├── ImpactSimulatorPage.vue   # Scenario simulator
 │   │   ├── WatchlistInsightsPage.vue # Watchlist analytics
 │   │   ├── DeliveryDashboardPage.vue # Alert delivery tracking
+│   │   ├── IndonesiaPage.vue         # 🇮🇩 Indonesia economic indicators
 │   │   └── RagReportBuilderPage.vue  # RAG report builder
 │   ├── components/
 │   │   ├── AssetCharts.vue           # Chart.js wrapper
 │   │   ├── MiniSparkline.vue         # Inline price sparkline
 │   │   ├── AlertCenter.vue           # Alert management panel
+│   │   ├── TradingViewWidgets.vue    # TradingView mini-charts + ticker
+│   │   ├── ColabNotes.vue            # Collaborative report notes sidebar
+│   │   ├── ReportDataQuality.vue     # Data quality badge + freshness
+│   │   ├── IndonesiaGauge.vue        # 🇮🇩 Indonesia economic gauge
+│   │   ├── IndonesiaMiniChart.vue    # 🇮🇩 Indonesia indicator sparkline
+│   │   ├── LanguageToggle.vue        # i18n language switcher
+│   │   ├── PersonaWidget.vue         # AI persona display
+│   │   ├── SkeletonLoader.vue        # Loading skeleton
 │   │   └── ToastStack.vue            # Notification toasts
 │   ├── composables/
-│   │   └── usePollingAlerts.js       # Alert polling hook
+│   │   ├── usePollingAlerts.js       # Alert polling hook
+│   │   ├── useSemanticSearch.js      # Semantic search hook
+│   │   └── useSymbolSearch.js        # Symbol search hook
 │   └── stores/
 │       ├── useAlerts.js              # Alert state management
 │       ├── usePreferences.js         # User preferences
@@ -114,6 +127,10 @@ npm run build
 | `VITE_API_PORT` | `4567` | Backend API port (used when `VITE_API_BASE` not set) |
 
 See [`.env.example`](.env.example) for reference.
+
+## ⚠️ Security Notice
+
+This repo is **public**. Never commit `.env` files or API keys. Copy `.env.example` → `.env` for local development.
 
 ## 🎨 Theming
 

@@ -4,6 +4,7 @@
       <button role="tab" :aria-selected="tab === 'report'" :class="['tab', {a: tab === 'report'}]" @click="tab='report'">Laporan</button>
       <button role="tab" :aria-selected="tab === 'full'" :class="['tab', {a: tab === 'full'}]" @click="tab='full'">Teks Lengkap</button>
       <button role="tab" :aria-selected="tab === 'compare'" :class="['tab', {a: tab === 'compare'}]" @click="tab='compare'; loadCompare()">Compare</button>
+      <button role="tab" :aria-selected="tab === 'charts'" :class="['tab', {a: tab === 'charts'}]" @click="tab='charts'">📊 Market Charts</button>
       <router-link :to="`/canvas/${route.params.slug}`" class="tab edit-tab" target="_blank">🎨 Canvas Report</router-link>
       <a :href="`/report-editor/${route.params.slug}`" class="tab edit-tab" target="_blank">✏️ Channel Edit</a>
     </div>
@@ -100,6 +101,17 @@
       <ul v-if="compareData"><li v-for="h in compareData.headlines.added.slice(0,8)" :key="h.url || h.title">+ {{ h.topic }} — {{ h.title }}</li></ul>
     </div>
 
+    <!-- Tab: Market Charts -->
+    <div v-show="tab === 'charts'" class="charts-tab">
+      <div class="charts-header">
+        <h2>📊 Market Overview</h2>
+        <p class="charts-subtitle">Data real-time dari TradingView · IHSG, US, China, Forex, Crypto, IDR</p>
+      </div>
+      <TradingViewWidgets />
+    </div>
+
+    <ReportDataQuality :report-slug="route.params.slug" style="margin-bottom:16px" />
+
     <aside class="evidence" v-if="report.blocks?.length" aria-label="Evidence-aware report composer">
       <h2>Evidence Composer</h2>
       <p class="meta">Klik badge untuk lihat source/claim, hide, atau lock paragraf sebelum export.</p>
@@ -126,6 +138,9 @@
         <div v-if="sourceDrawer.length" class="sources"><h4>Citation drawer</h4><a v-for="s in sourceDrawer" :key="s.url||s.title" :href="s.url" target="_blank" rel="noopener">{{ s.kind || s.retrieval || 'source' }} · {{ s.source }} · {{ s.title }}</a></div>
       </div>
     </aside>
+
+    <!-- Colab Notes (floating sidebar) -->
+    <ColabNotes :report-slug="route.params.slug" :sections="(report.topics || []).map(t => t.title)" />
   </div>
 
   <div v-else-if="error" class="err" role="alert">
@@ -141,6 +156,9 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSemanticSearch } from '../composables/useSemanticSearch.js'
+import TradingViewWidgets from '../components/TradingViewWidgets.vue'
+import ColabNotes from '../components/ColabNotes.vue'
+import ReportDataQuality from '../components/ReportDataQuality.vue'
 
 const route = useRoute()
 const semSearch = useSemanticSearch()
@@ -563,6 +581,11 @@ h1{font-size:clamp(20px,4vw,30px);color:var(--accent);margin-bottom:2px;line-hei
   padding-left: 7px;
   border-radius: 4px;
 }
+
+.charts-tab{max-width:900px;margin:0 auto}
+.charts-header{margin-bottom:16px}
+.charts-header h2{color:var(--accent);font-size:18px;margin-bottom:4px}
+.charts-subtitle{color:var(--muted);font-size:12px}
 
 @media(max-width:600px){
   .rw{padding:12px 8px 32px}

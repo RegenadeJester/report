@@ -16,6 +16,7 @@ const RagReportBuilderPage = () => import('./pages/RagReportBuilderPage.vue')
 const PersonaPage = () => import('./pages/PersonaPage.vue')
 const ReportCanvasPage = () => import('./pages/ReportCanvasPage.vue')
 const TradingViewPage = () => import('./pages/TradingViewPage.vue')
+const IndonesiaPage = () => import('./pages/IndonesiaPage.vue')
 const NotFoundPage = () => import('./pages/NotFoundPage.vue')
 const McpDocsPage = () => import('./pages/McpDocsPage.vue')
 
@@ -35,6 +36,7 @@ const router = createRouter({
     { path: '/report-editor/:slug', component: ReportEditorPage },
     { path: '/report/:slug', component: ReportPage },
     { path: '/tradingview', component: TradingViewPage },
+    { path: '/indonesia', component: IndonesiaPage },
     { path: '/docs/mcp', name: 'MCP Docs', component: McpDocsPage },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundPage }
   ]

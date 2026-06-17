@@ -18,6 +18,7 @@ const translations = {
     'nav.preferensi': 'Preferensi',
     'nav.rag': 'RAG Report',
     'nav.profile': 'Profile',
+    'nav.indonesia': '🇮🇩 Indonesia',
 
     // Toolbar
     'toolbar.sound': 'Sound alert',
@@ -430,6 +431,31 @@ const translations = {
 
     // ──── SkeletonLoader ───────────────────────────────────────
     'skeleton.loading': 'Memuat konten...',
+    // ──── IndonesiaPage ─────────────────────────────────────
+    'indonesia.title': '🇮🇩 Indikator Ekonomi Indonesia',
+    'indonesia.subtitle': 'Composite Crisis/Success Score + Live Market Dashboard',
+    'indonesia.composite': 'SKOR KOMPOSIT',
+    'indonesia.lastUpdate': 'Terakhir diperbarui',
+    'indonesia.signals': '🔔 Sinyal & Alert',
+    'indonesia.loadHistory': 'Riwayat Alert',
+    'indonesia.suggested': 'Saran',
+    'indonesia.noSignals': 'Belum ada sinyal. Sistem memantau secara otomatis.',
+    'indonesia.yield.title': 'Kurva Yield SUN',
+    'indonesia.yield.inverted': 'TERINVERSI',
+    'indonesia.yield.normal': 'Normal',
+    'indonesia.yield.spread': 'Spread 2Y-10Y',
+    'indonesia.yield.yield': 'Yield %',
+    'indonesia.ihsg.title': 'IHSG Composite',
+    'indonesia.ihsg.neutral': 'Netral',
+    'indonesia.ihsg.dayRange': 'Range Hari',
+    'indonesia.ihsg.weekRange': 'Minggu Range',
+    'indonesia.rsi.oversold': 'Oversold',
+    'indonesia.rsi.overbought': 'Overbought',
+    'indonesia.rsi.neutral': 'Netral',
+    'indonesia.macro.title': 'Indikator Makro',
+    'indonesia.macro.noHistory': 'Riwayat belum tersedia',
+    'indonesia.crypto.title': 'Crypto (IDR)',
+    'indonesia.crypto.fearGreed': 'Fear & Greed Index',
   },
   en: {
     // Header / Nav
@@ -448,6 +474,7 @@ const translations = {
     'nav.preferensi': 'Preferences',
     'nav.rag': 'RAG Report',
     'nav.profile': 'Profile',
+    'nav.indonesia': '🇮🇩 Indonesia',
 
     // Toolbar
     'toolbar.sound': 'Alert sound',
@@ -860,6 +887,31 @@ const translations = {
 
     // ──── SkeletonLoader ───────────────────────────────────────
     'skeleton.loading': 'Loading content...',
+    // ──── IndonesiaPage ─────────────────────────────────────
+    'indonesia.title': '🇮🇩 Indonesia Economic Indicators',
+    'indonesia.subtitle': 'Composite Crisis/Success Score + Live Market Dashboard',
+    'indonesia.composite': 'COMPOSITE SCORE',
+    'indonesia.lastUpdate': 'Last updated',
+    'indonesia.signals': '🔔 Signals & Alerts',
+    'indonesia.loadHistory': 'Alert History',
+    'indonesia.suggested': 'Suggested',
+    'indonesia.noSignals': 'No signals yet. System monitors automatically.',
+    'indonesia.yield.title': 'SUN Bond Yield Curve',
+    'indonesia.yield.inverted': 'INVERTED',
+    'indonesia.yield.normal': 'Normal',
+    'indonesia.yield.spread': '2Y-10Y Spread',
+    'indonesia.yield.yield': 'Yield %',
+    'indonesia.ihsg.title': 'IHSG Composite',
+    'indonesia.ihsg.neutral': 'Neutral',
+    'indonesia.ihsg.dayRange': 'Day Range',
+    'indonesia.ihsg.weekRange': 'Week Range',
+    'indonesia.rsi.oversold': 'Oversold',
+    'indonesia.rsi.overbought': 'Overbought',
+    'indonesia.rsi.neutral': 'Neutral',
+    'indonesia.macro.title': 'Macro Indicators',
+    'indonesia.macro.noHistory': 'No history yet',
+    'indonesia.crypto.title': 'Crypto (IDR)',
+    'indonesia.crypto.fearGreed': 'Fear & Greed Index',
   }
 }
 
