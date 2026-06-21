@@ -26,6 +26,10 @@ let timer = null
 let focusStream = null
 let overviewStream = null
 
+// Report history
+const recentReports = ref([])
+const reportsLoading = ref(true)
+
 // Marquee data
 const marqueeItems = ref([])
 const marqueeLoaded = ref(false)
@@ -66,6 +70,15 @@ async function load() {
   if (!selectedSlug.value && assets.value.length) selectedSlug.value = assets.value[0].slug
   buildMarquee(data.assets || [])
   loading.value = false
+  loadReports()
+}
+
+async function loadReports() {
+  try {
+    const data = await apiGet('/api/reports?metadata=true')
+    recentReports.value = Array.isArray(data) ? data.slice(0, 7) : []
+  } catch {}
+  reportsLoading.value = false
 }
 
 function buildMarquee(allAssets) {
@@ -412,4 +425,36 @@ onBeforeUnmount(() => {
       </div>
     </div>
   </section>
+
+  <!-- ═══ Recent Reports ═══════════════════════════════════ -->
+  <section v-if="!reportsLoading && recentReports.length" class="recent-reports-section">
+    <h3 class="section-title" style="margin-bottom:12px">📋 Laporan Terbaru</h3>
+    <div class="report-horiz-scroll">
+      <RouterLink v-for="r in recentReports" :key="r.slug" :to="`/report/${r.slug}`" class="report-horiz-card premium-card">
+        <span class="report-horiz-date">{{ r.date }}</span>
+        <span class="report-horiz-title">{{ r.title }}</span>
+        <span class="report-horiz-meta">{{ r.topicCount }} topik{{ r.hasIncidents ? ` · ⚠️ ${r.incidentCount} insiden` : '' }}</span>
+      </RouterLink>
+    </div>
+  </section>
 </template>
+
+<style scoped>
+/* ═══ Recent Reports Horizontal ═══════════════════════════ */
+.recent-reports-section { margin-top: 24px; }
+.report-horiz-scroll {
+  display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+}
+.report-horiz-card {
+  flex: 0 0 200px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 4px;
+  padding: 14px 16px; text-decoration: none; color: inherit;
+  border: 2px solid var(--premium-border, #222); background: var(--premium-card-bg, #1a1a1a);
+  border-radius: 10px; transition: border-color 0.15s;
+}
+.report-horiz-card:hover { border-color: var(--premium-accent, #60a5fa); }
+.report-horiz-date { font-size: 11px; color: var(--premium-text-tertiary, #888); font-weight: 600; letter-spacing: 0.5px; }
+.report-horiz-title { font-size: 13px; font-weight: 700; line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.report-horiz-meta { font-size: 11px; color: var(--premium-text-secondary, #aaa); margin-top: auto; }
+</style>

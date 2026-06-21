@@ -19,6 +19,8 @@ const reducedMotion = ref(localStorage.getItem('market-orca:reduced-motion') ===
 const density = ref(localStorage.getItem('market-orca:density') || 'normal')
 const fontScale = ref(localStorage.getItem('market-orca:font-scale') || '100')
 const latestReport = ref('')
+const latestReportMeta = ref(null)
+const recentReports = ref([])
 const { dataSaver } = useRuntimeSettings()
 
 function applyTheme(value) {
@@ -76,7 +78,13 @@ onMounted(() => {
   applyReducedMotion(reducedMotion.value)
   applyDensity(density.value)
   applyFontScale(fontScale.value)
-  fetch(`${API_BASE}/api/reports`).then(r=>r.json()).then(d=>{ latestReport.value = Array.isArray(d) ? d[0] : '' }).catch(()=>{})
+  fetch(`${API_BASE}/api/reports?metadata=true`).then(r=>r.json()).then(d=>{
+    if (Array.isArray(d)) {
+      latestReport.value = d[0]?.slug || ''
+      latestReportMeta.value = d[0] || null
+      recentReports.value = d.slice(0, 7)
+    }
+  }).catch(()=>{})
 })
 watch(theme, applyTheme)
 </script>
