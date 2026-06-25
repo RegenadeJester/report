@@ -6,6 +6,8 @@ import { usePreferences, loadFavorites } from '../stores/usePreferences'
 import { useRuntimeSettings } from '../stores/useRuntimeSettings'
 import { useSymbolSearch } from '../composables/useSymbolSearch'
 import MiniSparkline from '../components/MiniSparkline.vue'
+import AlertSummaryWidget from '../components/AlertSummaryWidget.vue'
+import MarketStatusBar from '../components/MarketStatusBar.vue'
 
 const router = useRouter()
 const { favorites, toggleFavorite } = usePreferences()
@@ -272,6 +274,9 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
+  <!-- ═══ Market Status Bar ═══════════════════════════════════ -->
+  <MarketStatusBar />
+
   <!-- ═══ Market Watch Search ═════════════════════════════════ -->
   <div class="panel" role="search" aria-label="Market watch search">
     <h2>🔍 Market Watch</h2>
@@ -399,6 +404,9 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
+  <!-- ═══ Alert Summary Dashboard ═════════════════════════════ -->
+  <AlertSummaryWidget />
+
   <section v-if="focusMode === 'single' && focusAsset" class="panel focus-panel" role="region" aria-label="Focus mode">
     <small>Focus mode</small>
     <h2>{{ focusAsset.name }} ({{ focusAsset.symbol }})</h2>
@@ -440,21 +448,72 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* ═══ Recent Reports Horizontal ═══════════════════════════ */
-.recent-reports-section { margin-top: 24px; }
+/* ═══ Recent Reports Horizontal Scroll ════════════════════════════ */
+.recent-reports-section {
+  margin-top: var(--space-6, 24px);
+}
+
+.section-title {
+  font-size: calc(1.125rem * var(--font-scale, 1));
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
 .report-horiz-scroll {
-  display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;
+  display: flex;
+  gap: var(--space-3, 12px);
+  overflow-x: auto;
+  padding-bottom: var(--space-2, 8px);
   scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong, #353645) transparent;
 }
+
 .report-horiz-card {
-  flex: 0 0 200px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 4px;
-  padding: 14px 16px; text-decoration: none; color: inherit;
-  border: 2px solid var(--premium-border, #222); background: var(--premium-card-bg, #1a1a1a);
-  border-radius: 10px; transition: border-color 0.15s;
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-4, 16px);
+  text-decoration: none;
+  color: inherit;
+  background: var(--premium-card-bg, var(--panel, #14151e));
+  border: 1px solid var(--premium-border, var(--line, #2a2b36));
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
-.report-horiz-card:hover { border-color: var(--premium-accent, #60a5fa); }
-.report-horiz-date { font-size: 11px; color: var(--premium-text-tertiary, #888); font-weight: 600; letter-spacing: 0.5px; }
-.report-horiz-title { font-size: 13px; font-weight: 700; line-height: 1.3;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.report-horiz-meta { font-size: 11px; color: var(--premium-text-secondary, #aaa); margin-top: auto; }
+
+.report-horiz-card:hover {
+  border-color: var(--premium-accent, var(--accent, #00d4aa));
+  background: var(--accent-dim, rgba(0, 212, 170, 0.08));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.report-horiz-date {
+  font-size: var(--font-overline, 0.6875rem);
+  color: var(--premium-text-tertiary, var(--muted-subtle, #5c6072));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.report-horiz-title {
+  font-size: var(--font-small, 0.8125rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.report-horiz-meta {
+  font-size: var(--font-caption, 0.75rem);
+  color: var(--premium-text-secondary, var(--muted, #8b8fa3));
+  margin-top: auto;
+}
 </style>
