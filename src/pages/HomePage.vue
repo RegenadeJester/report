@@ -29,6 +29,7 @@ let focusStream = null
 let overviewStream = null
 
 // Report history
+const todayReport = ref(null)
 const recentReports = ref([])
 const reportsLoading = ref(true)
 
@@ -68,6 +69,7 @@ async function load() {
   const data = await apiGet('/api/overview')
   assets.value = data.assets || []
   news.value = data.latestNews || []
+  todayReport.value = data.todayReport || null
   apiGet('/api/watchlist/insights').then(d => { insights.value = d }).catch(() => {})
   if (!selectedSlug.value && assets.value.length) selectedSlug.value = assets.value[0].slug
   buildMarquee(data.assets || [])
@@ -382,6 +384,26 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
+  <!-- ═══ Today's Report Banner ═══════════════════════════════════════ -->
+  <RouterLink v-if="todayReport" :to="`/report/${todayReport.slug}`"
+              class="today-report-banner" role="region" aria-label="Laporan hari ini">
+    <div class="trb-left">
+      <span class="trb-badge">📊 Laporan Hari Ini</span>
+      <span class="trb-title">{{ todayReport.title }}</span>
+      <span class="trb-meta">
+        {{ todayReport.topicCount }} topik · {{ todayReport.generatedAt }}
+        <span v-if="todayReport.hasIncidents" class="trb-incidents">
+          · ⚠️ {{ todayReport.incidentCount }} insiden
+        </span>
+      </span>
+    </div>
+    <span class="trb-cta">Buka →</span>
+  </RouterLink>
+
+  <section v-else class="panel today-report-empty" role="region" aria-label="Laporan hari ini belum tersedia">
+    <span style="opacity:0.5">📊 Laporan hari ini belum tersedia. Generate via <RouterLink to="/report-editor" style="color:var(--accent)">Report Editor</RouterLink>.</span>
+  </section>
+
   <section class="panel lab-panel" role="region" aria-label="Market Orca Lab">
     <small>Market Orca Lab</small>
     <h2>Event Impact Simulator</h2>
@@ -515,5 +537,63 @@ onBeforeUnmount(() => {
   font-size: var(--font-caption, 0.75rem);
   color: var(--premium-text-secondary, var(--muted, #8b8fa3));
   margin-top: auto;
+}
+
+/* ═══ Today's Report Banner ════════════════════════════════════════ */
+.today-report-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4, 16px);
+  padding: var(--space-4, 16px) var(--space-5, 20px);
+  background: linear-gradient(135deg, var(--accent-dim, rgba(0, 212, 170, 0.12)), var(--panel, #14151e));
+  border: 1px solid var(--premium-accent, var(--accent, #00d4aa));
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  margin-top: var(--space-4, 16px);
+}
+.today-report-banner:hover {
+  border-color: var(--accent, #00d4aa);
+  box-shadow: 0 6px 24px rgba(0, 212, 170, 0.15);
+  transform: translateY(-1px);
+}
+.trb-left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.trb-badge {
+  font-size: var(--font-overline, 0.6875rem);
+  font-weight: 700;
+  color: var(--accent, #00d4aa);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.trb-title {
+  font-size: var(--font-base, 0.9375rem);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.trb-meta {
+  font-size: var(--font-caption, 0.75rem);
+  color: var(--muted, #8b8fa3);
+}
+.trb-incidents {
+  color: var(--warning, #f59e0b);
+  font-weight: 600;
+}
+.trb-cta {
+  font-size: var(--font-small, 0.8125rem);
+  font-weight: 600;
+  color: var(--accent, #00d4aa);
+  white-space: nowrap;
+}
+
+.today-report-empty {
+  margin-top: var(--space-4, 16px);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  background: var(--panel, #14151e);
+  border: 1px dashed var(--line, #2a2b36);
+  border-radius: 10px;
+  text-align: center;
 }
 </style>
