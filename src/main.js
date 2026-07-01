@@ -19,6 +19,7 @@ const TradingViewPage = () => import('./pages/TradingViewPage.vue')
 const IndonesiaPage = () => import('./pages/IndonesiaPage.vue')
 const NotFoundPage = () => import('./pages/NotFoundPage.vue')
 const McpDocsPage = () => import('./pages/McpDocsPage.vue')
+const PipelineMonitorPage = () => import('./pages/PipelineMonitorPage.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +39,7 @@ const router = createRouter({
     { path: '/tradingview', component: TradingViewPage },
     { path: '/indonesia', component: IndonesiaPage },
     { path: '/docs/mcp', name: 'MCP Docs', component: McpDocsPage },
+    { path: '/pipeline', name: 'Pipeline', component: PipelineMonitorPage },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundPage }
   ]
 })
