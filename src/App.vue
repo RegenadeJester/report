@@ -111,6 +111,7 @@ watch(theme, applyTheme)
         <RouterLink to="/report-preferences" @click="menuOpen=false">{{ t('nav.preferensi') }}</RouterLink>
         <RouterLink to="/rag-report" @click="menuOpen=false">{{ t('nav.rag') }}</RouterLink>
         <RouterLink to="/tradingview" @click="menuOpen=false">TradingView</RouterLink>
+        <RouterLink to="/pipeline" @click="menuOpen=false">Pipeline</RouterLink>
         <RouterLink to="/indonesia" @click="menuOpen=false">🇮🇩 Indonesia</RouterLink>
         <RouterLink to="/profile" @click="menuOpen=false">{{ t('nav.profile') }}</RouterLink>
         <a :href="latestReport ? `/report/${latestReport}` : '/report'" @click="menuOpen=false">{{ t('nav.laporan') }}</a>
@@ -158,35 +159,77 @@ watch(theme, applyTheme)
 </template>
 
 <style scoped>
-.hamburger{display:none;background:0;border:0;padding:8px;cursor:pointer;z-index:100}
-.hamburger-icon{display:flex;flex-direction:column;gap:5px;width:28px}
-.hamburger-icon span{display:block;height:3px;width:100%;background:var(--ink);border-radius:2px;transition:.25s}
-.hamburger-icon.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
-.hamburger-icon.open span:nth-child(2){opacity:0}
-.hamburger-icon.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
-@media(max-width:768px){
-  .hamburger{display:block}
-  .topbar{flex-wrap:wrap}
-  .topnav{display:none;width:100%;flex-direction:column;gap:0;margin-top:8px}
-  .topnav.is-open{display:flex}
-  .brutal-nav a{width:100%;text-align:center;box-shadow:none;border-radius:8px;margin-bottom:4px}
+.hamburger {
+  display: none;
+  background: none;
+  border: 0;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 100;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.hamburger:hover {
+  background: var(--accent-dim, rgba(0,212,170,0.12));
+}
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 28px;
+}
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--ink);
+  border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.hamburger-icon.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-icon.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+@media (max-width: 768px) {
+  .hamburger { display: block; }
+  .topbar { flex-wrap: wrap; }
+  .topnav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 8px;
+  }
+  .topnav.is-open { display: flex; }
+  .brutal-nav a {
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
 }
 
 .disclaimer-footer {
-  border-top: 2px solid var(--ink, #2d3748);
-  padding: 16px 24px;
-  margin-top: 32px;
-  background: var(--card-bg, #0d1117);
-  font-size: 0.82rem;
-  color: var(--text-muted, #a0aec0);
+  border-top: 1px solid var(--line, #2a2b36);
+  padding: 20px 24px;
+  margin-top: 40px;
+  background: var(--panel, #14151e);
+  font-size: 0.8125rem;
+  color: var(--muted, #8b8fa3);
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.65;
+  border-radius: 0 0 12px 12px;
 }
 .disclaimer-line {
   margin: 4px 0;
 }
 .disclaimer-warning {
-  opacity: 0.85;
-  font-size: 0.78rem;
+  opacity: 0.7;
+  font-size: 0.75rem;
 }
 </style>
