@@ -1,7 +1,7 @@
-const host = window.location.hostname || 'localhost'
-const protocol = window.location.protocol || 'http:'
-const apiPort = import.meta.env.VITE_API_PORT || '1747'
-export const API_BASE = import.meta.env.VITE_API_BASE || `${protocol}//${host}:${apiPort}`
+// API_BASE: relative URLs always (same origin). Works with Cloudflare tunnel + localhost proxy.
+// VITE_API_BASE override for dev only — never ship port-qualified URLs to production.
+const _envBase = import.meta.env.VITE_API_BASE
+export const API_BASE = (_envBase && _envBase.trim()) || ''
 
 async function withRetry(fn, maxAttempts = 2) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
