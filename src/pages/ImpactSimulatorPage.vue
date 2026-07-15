@@ -12,17 +12,17 @@
           <option v-for="t in templates" :key="t.type" :value="t.type">{{ t.label }}</option>
         </select>
       </label>
-      <label>Timeframe
+      <label>Jangka Waktu
         <select v-model="timeframe">
-          <option value="1d">1 day</option>
-          <option value="1w">1 week</option>
-          <option value="1m">1 month</option>
+          <option value="1d">1 hari</option>
+          <option value="1w">1 minggu</option>
+          <option value="1m">1 bulan</option>
         </select>
       </label>
-      <label>Scope
+      <label>Cakupan
         <select v-model="scope">
-          <option value="all">All impacted assets</option>
-          <option value="watchlist">Watchlist only</option>
+          <option value="all">Semua aset terdampak</option>
+          <option value="watchlist">Hanya watchlist</option>
         </select>
       </label>
       <label>Severity {{ severity }}x
@@ -34,19 +34,19 @@
       <label class="wide">Custom event
         <input v-model="customEvent" placeholder="contoh: BI rate hike dan rupiah stress" />
       </label>
-      <button @click="simulate" :disabled="loading">{{ loading ? 'Running…' : 'Run Simulation' }}</button>
+      <button @click="simulate" :disabled="loading">{{ loading ? 'Menjalankan…' : 'Jalankan Simulasi' }}</button>
     </section>
 
     <section v-if="result" class="grid">
       <div class="panel">
         <p class="kicker">{{ result.event_label }}</p>
-        <h2>Drivers</h2>
+        <h2>Pendorong</h2>
         <div class="chips"><span v-for="d in result.drivers" :key="d">{{ d }}</span></div>
-        <h2>Signals</h2>
+        <h2>Sinyal</h2>
         <div class="chips"><span v-for="s in result.signals" :key="s">{{ s }}</span></div>
       </div>
       <div class="panel md">
-        <div class="md-head"><h2>Export Block</h2><button @click="copyMd">Copy MD</button></div>
+        <div class="md-head"><h2>Blok Ekspor</h2><button @click="copyMd">Salin MD</button></div>
         <pre>{{ result.markdown }}</pre>
       </div>
     </section>
