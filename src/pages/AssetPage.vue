@@ -101,8 +101,8 @@ onBeforeUnmount(() => {
         <p>{{ asset.thesis }}</p>
       </div>
       <div class="asset-actions">
-        <button class="refresh-btn" @click="load">Refresh detail</button>
-        <button class="refresh-btn" @click="sendTestAlert">Kirim test alert ke Discord</button>
+        <button class="refresh-btn" @click="load">Muat ulang detail</button>
+        <button class="refresh-btn" @click="sendTestAlert">Kirim tes alert ke Discord</button>
       </div>
     </div>
 
@@ -114,19 +114,19 @@ onBeforeUnmount(() => {
         <p v-for="(paragraph, idx) in article.body" :key="idx">{{ paragraph }}</p>
       </div>
       <div class="panel nested">
-        <h3>Threshold editor</h3>
-        <div class="filters" aria-label="Threshold editor">
+        <h3>Editor ambang batas</h3>
+        <div class="filters" aria-label="Editor ambang batas">
           <label class="sr-only" for="threshold-up">Alert naik</label>
-          <input id="threshold-up" v-model="thresholdUp" inputmode="decimal" placeholder="Alert up threshold %" />
+          <input id="threshold-up" v-model="thresholdUp" inputmode="decimal" placeholder="Ambang naik %" />
           <label class="sr-only" for="threshold-down">Alert turun</label>
-          <input id="threshold-down" v-model="thresholdDown" inputmode="decimal" placeholder="Alert down threshold %" />
-          <button class="refresh-btn" @click="saveThreshold">Simpan threshold</button>
+          <input id="threshold-down" v-model="thresholdDown" inputmode="decimal" placeholder="Ambang turun %" />
+          <button class="refresh-btn" @click="saveThreshold">Simpan ambang batas</button>
         </div>
         <div v-if="recommendation" class="recommendation-card">
           <strong>Rekomendasi alert</strong>
           <p>Naik {{ recommendation.recommended_threshold_up }}% • Turun {{ recommendation.recommended_threshold_down }}%</p>
           <small>basis: {{ recommendation.basis.market }} • {{ recommendation.basis.samples }} sampel • avg move {{ recommendation.basis.avg_abs_change_percent }}% • confidence {{ recommendation.basis.confidence }}</small>
-          <button class="refresh-btn" @click="applyRecommendation">Pakai rekomendasi</button>
+          <button class="refresh-btn" @click="applyRecommendation">Gunakan rekomendasi</button>
         </div>
         <small aria-live="polite">status: {{ saveState || 'idle' }}</small>
       </div>
@@ -166,7 +166,7 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="panel nested">
-      <h3>Histori snapshot</h3>
+      <h3>Riwayat snapshot</h3>
       <div class="history-list">
         <article v-for="(row, idx) in history.slice(0, 10)" :key="idx" class="news-card">
           <small>{{ row.created_at }}</small>
@@ -196,5 +196,5 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
-  <section v-else class="panel">{{ loading ? 'Loading...' : 'Asset tidak ditemukan' }}</section>
+  <section v-else class="panel">{{ loading ? 'Memuat...' : 'Aset tidak ditemukan' }}</section>
 </template>

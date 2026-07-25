@@ -50,8 +50,8 @@
       <div class="out-head">
         <div><h2>Hasil Laporan</h2><p>ID #{{ result.id || 'guarded' }} · confidence {{ result.confidence }} · intent {{ result.relevanceGate?.intent || 'auto' }}</p></div>
         <div class="actions">
-          <a :href="`${apiBase}/api/reports/rag/${result.id}/export?format=md`" target="_blank">Export MD</a>
-          <a :href="`${apiBase}/api/reports/rag/${result.id}/export?format=pdf`" target="_blank">Export PDF</a>
+          <a :href="`${apiBase}/api/reports/rag/${result.id}/export?format=md`" target="_blank">Ekspor MD</a>
+          <a :href="`${apiBase}/api/reports/rag/${result.id}/export?format=pdf`" target="_blank">Ekspor PDF</a>
         </div>
       </div>
       <div class="quality-strip" :class="result.docs?.length ? 'ok' : 'bad'">

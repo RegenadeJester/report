@@ -3,10 +3,10 @@
     <div class="tabs" v-if="!loading" role="tablist" aria-label="Mode baca laporan">
       <button role="tab" :aria-selected="tab === 'report'" :class="['tab', {a: tab === 'report'}]" @click="tab='report'">Laporan</button>
       <button role="tab" :aria-selected="tab === 'full'" :class="['tab', {a: tab === 'full'}]" @click="tab='full'">Teks Lengkap</button>
-      <button role="tab" :aria-selected="tab === 'compare'" :class="['tab', {a: tab === 'compare'}]" @click="tab='compare'; loadCompare()">Compare</button>
-      <button role="tab" :aria-selected="tab === 'charts'" :class="['tab', {a: tab === 'charts'}]" @click="tab='charts'">📊 Market Charts</button>
-      <router-link :to="`/canvas/${route.params.slug}`" class="tab edit-tab" target="_blank">🎨 Canvas Report</router-link>
-      <a :href="`/report-editor/${route.params.slug}`" class="tab edit-tab" target="_blank">✏️ Channel Edit</a>
+      <button role="tab" :aria-selected="tab === 'compare'" :class="['tab', {a: tab === 'compare'}]" @click="tab='compare'; loadCompare()">Bandingkan</button>
+      <button role="tab" :aria-selected="tab === 'charts'" :class="['tab', {a: tab === 'charts'}]" @click="tab='charts'">📊 Grafik Pasar</button>
+      <router-link :to="`/canvas/${route.params.slug}`" class="tab edit-tab" target="_blank">🎨 Kanvas Laporan</router-link>
+      <a :href="`/report-editor/${route.params.slug}`" class="tab edit-tab" target="_blank">✏️ Edit Saluran</a>
     </div>
 
     <!-- Tab: Card Report -->
@@ -73,7 +73,7 @@
             <span v-if="item.tag" class="tag-badge" :class="tagBadgeClass(item.tag)" role="status">{{ formatTag(item.tag) }}</span>
             <span v-if="semSearch.getItemScore(item, topic.title) !== null" class="ss-score-badge" :class="scoreClass(semSearch.getItemScore(item, topic.title))" :title="'Skor semantik: ' + Math.round(semSearch.getItemScore(item, topic.title) * 100) + '%'" role="status" aria-label="Relevansi semantik">{{ scoreLabel(semSearch.getItemScore(item, topic.title)) }}</span>
             <div class="snip" v-if="item.snippet && item.snippet !== item.title">{{ expanded[item.url || item.title] ? item.snippet : sentenceTrunc(item.snippet, 220) }}</div>
-            <button v-if="item.snippet?.length > 220" class="more" @click="toggleMore(item)">{{ expanded[item.url || item.title] ? 'Tutup konteks' : 'Show more' }}</button>
+            <button v-if="item.snippet?.length > 220" class="more" @click="toggleMore(item)">{{ expanded[item.url || item.title] ? 'Tutup konteks' : 'Buka selengkapnya' }}</button>
             <div class="meta" v-if="item.points">Skor: {{ item.points }} poin{{ item.comments ? ' · '+item.comments+' komentar' : '' }}</div>
             <a class="link source-cta" :href="item.url" target="_blank" rel="noopener noreferrer" :aria-label="`Buka sumber ${item.title} di tab baru`">Baca selengkapnya</a>
           </div>
@@ -88,15 +88,15 @@
 
     <!-- Tab: Compare -->
     <div v-show="tab === 'compare'" class="card cmp">
-      <h2>Report Comparison</h2>
+      <h2>Perbandingan Laporan</h2>
       <div class="row"><label>Bandingkan dengan</label><select v-model="compareSlug" @change="loadCompare"><option v-for="s in reportList.filter(x=>x!==route.params.slug)" :key="s" :value="s">{{ s }}</option></select></div>
       <p v-if="compareLoading" class="meta">Memuat diff...</p>
       <p v-else-if="compareData" class="stext">{{ compareData.summary }}</p>
       <div v-if="compareData" class="grid2">
-        <div><b>Stats</b><p>Item Δ {{ compareData.stats.item_delta }} · Source Δ {{ compareData.stats.source_delta }}</p></div>
+        <div><b>Statistik</b><p>Item Δ {{ compareData.stats.item_delta }} · Source Δ {{ compareData.stats.source_delta }}</p></div>
         <div><b>Topik baru</b><p>{{ compareData.topics.added.join(', ') || '-' }}</p></div>
         <div><b>Topik hilang</b><p>{{ compareData.topics.removed.join(', ') || '-' }}</p></div>
-        <div><b>Repeated headlines</b><p>{{ compareData.headlines.repeated.length }}</p></div>
+        <div><b>Judul Berulang</b><p>{{ compareData.headlines.repeated.length }}</p></div>
       </div>
       <ul v-if="compareData"><li v-for="h in compareData.headlines.added.slice(0,8)" :key="h.url || h.title">+ {{ h.topic }} — {{ h.title }}</li></ul>
     </div>
@@ -113,10 +113,10 @@
     <ReportDataQuality :report-slug="route.params.slug" style="margin-bottom:16px" />
 
     <aside class="evidence" v-if="report.blocks?.length" aria-label="Evidence-aware report composer">
-      <h2>Evidence Composer</h2>
+      <h2>Komposer Bukti</h2>
       <p class="meta">Klik badge untuk lihat source/claim, hide, atau lock paragraf sebelum export.</p>
-      <button class="more" @click="remapAllBlocks">Remap All Blocks</button>
-      <button class="more" @click="rewriteWeakBlocks">Rewrite Weak Blocks</button>
+      <button class="more" @click="remapAllBlocks">Remap Semua Blok</button>
+      <button class="more" @click="rewriteWeakBlocks">Tulis Ulang Blok Lemah</button>
       <div v-for="b in report.blocks.filter(x=>!x.hidden).slice(0,8)" :key="b.block_key" class="block" :class="b.claim_type">
         <button class="claim" @click="editingBlock = b">{{ claimLabel(b.claim_type) }} · {{ Math.round(Number(b.confidence)*100) }}% · health {{ b.evidence_health?.score ?? '-' }}</button>
         <p>{{ sentenceTrunc(b.body_md, 220) }}</p>
@@ -129,13 +129,13 @@
         <p>Evidence: {{ editingBlock.evidence_ids }}</p>
         <p v-if="editingBlock.evidence_health">Health: {{ editingBlock.evidence_health.score }} · {{ editingBlock.evidence_health.badges.join(', ') }}</p>
         <button class="more" @click="saveBlock(editingBlock)">Simpan</button>
-        <button class="more" @click="rewriteBlock(editingBlock)">Rewrite RAG</button>
-        <button class="more" @click="remapEvidence(editingBlock)">Remap Evidence</button>
-        <button class="more" @click="loadSources(editingBlock)">Sources</button>
-        <button class="more" @click="saveBlock({...editingBlock, locked: editingBlock.locked ? 0 : 1})">{{ editingBlock.locked ? 'Unlock' : 'Lock' }}</button>
-        <button class="more" @click="saveBlock({...editingBlock, hidden:1})">Hide</button>
-        <div v-if="pendingRewrite" class="sources"><h4>Rewrite diff</h4><p><b>Before</b>: {{ sentenceTrunc(pendingRewrite.before, 360) }}</p><p><b>After</b>: {{ sentenceTrunc(pendingRewrite.after, 360) }}</p><button class="more" @click="acceptRewrite(pendingRewrite)">Accept</button><button class="more" @click="rejectRewrite(pendingRewrite)">Reject</button></div>
-        <div v-if="sourceDrawer.length" class="sources"><h4>Citation drawer</h4><a v-for="s in sourceDrawer" :key="s.url||s.title" :href="s.url" target="_blank" rel="noopener">{{ s.kind || s.retrieval || 'source' }} · {{ s.source }} · {{ s.title }}</a></div>
+        <button class="more" @click="rewriteBlock(editingBlock)">Tulis Ulang RAG</button>
+        <button class="more" @click="remapEvidence(editingBlock)">Remap Bukti</button>
+        <button class="more" @click="loadSumber(editingBlock)">Sumber</button>
+        <button class="more" @click="saveBlock({...editingBlock, locked: editingBlock.locked ? 0 : 1})">{{ editingBlock.locked ? 'Buka' : 'Kunci' }}</button>
+        <button class="more" @click="saveBlock({...editingBlock, hidden:1})">Sembunyikan</button>
+        <div v-if="pendingRewrite" class="sources"><h4>Diff Tulis Ulang</h4><p><b>Sebelum</b>: {{ sentenceTrunc(pendingRewrite.before, 360) }}</p><p><b>Sesudah</b>: {{ sentenceTrunc(pendingRewrite.after, 360) }}</p><button class="more" @click="acceptRewrite(pendingRewrite)">Terima</button><button class="more" @click="rejectRewrite(pendingRewrite)">Tolak</button></div>
+        <div v-if="sourceDrawer.length" class="sources"><h4>Laci Sitasi</h4><a v-for="s in sourceDrawer" :key="s.url||s.title" :href="s.url" target="_blank" rel="noopener">{{ s.kind || s.retrieval || 'sumber' }} · {{ s.source }} · {{ s.title }}</a></div>
       </div>
     </aside>
 
@@ -289,9 +289,9 @@ async function remapEvidence(b) {
   sourceDrawer.value = data.sources || []
   editingBlock.value = data.block
 }
-async function loadSources(b) {
+async function loadSumber(b) {
   const res = await fetch(`/api/report/${encodeURIComponent(route.params.slug)}/blocks/${encodeURIComponent(b.block_key)}/sources`)
-  if (!res.ok) { error.value = `Sources failed ${res.status}`; return }
+  if (!res.ok) { error.value = `Sumber failed ${res.status}`; return }
   const data = await res.json()
   sourceDrawer.value = data.sources || []
 }

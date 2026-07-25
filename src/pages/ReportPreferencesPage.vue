@@ -48,16 +48,16 @@ onMounted(loadPrefs)
 <template>
   <main class="page-grid">
     <section class="panel hero-panel">
-      <p class="kicker">Personalized Report Preferences</p>
+      <p class="kicker">Preferensi Laporan Personal</p>
       <h2>Atur gaya report + konteks keputusan</h2>
-      <p>Context Gap Interviewer mencegah report generik. Kalau konteks kosong, report pakai asumsi low-confidence dan tanya 3 pertanyaan paling penting.</p>
+      <p>Pewawancara Celah Konteks mencegah report generik. Kalau konteks kosong, report pakai asumsi low-confidence dan tanya 3 pertanyaan paling penting.</p>
     </section>
 
     <section class="panel context-card">
       <div class="context-head">
         <div>
-          <p class="kicker">Context Gap Interviewer</p>
-          <h3>Report confidence: <span :class="gaps.confidence === 'high' ? 'ok' : 'warn'">{{ gaps.confidence }}</span></h3>
+          <p class="kicker">Pewawancara Celah Konteks</p>
+          <h3>Kepercayaan laporan: <span :class="gaps.confidence === 'high' ? 'ok' : 'warn'">{{ gaps.confidence }}</span></h3>
         </div>
         <button class="ghost-btn" @click="loadPrefs">Refresh</button>
       </div>
@@ -74,18 +74,18 @@ onMounted(loadPrefs)
       <p v-else class="ok-box">Konteks utama lengkap. Report bisa lebih tajam.</p>
 
       <details class="assumption-box">
-        <summary>Fallback assumptions</summary>
+        <summary>Asumsi cadangan</summary>
         <ul>
           <li v-for="a in gaps.assumptions" :key="a.key"><b>{{ a.key }}</b>: {{ a.value }} · confidence {{ a.confidence }}</li>
         </ul>
       </details>
       <details class="assumption-box">
-        <summary>Saved answers</summary>
+        <summary>Jawaban tersimpan</summary>
         <ul>
           <li v-for="(a,k) in gaps.answers" :key="k"><b>{{ k }}</b>: {{ a.value }} · {{ a.source }} · confidence {{ a.confidence }}</li>
         </ul>
       </details>
-      <p class="muted">Answer status: {{ answerStatus || '-' }}</p>
+      <p class="muted">Status jawaban: {{ answerStatus || '-' }}</p>
     </section>
 
     <section class="panel pref-form">

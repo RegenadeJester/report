@@ -38,7 +38,7 @@
         <textarea v-model="localText" @input="dirty = true"
           class="code-editor"
           :style="{ minHeight: Math.max(400, Math.min(1200, (textReport?.length || 0) * 0.04)) + 'px' }"
-          placeholder="Edit report text here..."></textarea>
+          placeholder="Edit teks laporan di sini..."></textarea>
       </div>
 
       <!-- DISCORD TAB -->

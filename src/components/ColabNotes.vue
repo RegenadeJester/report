@@ -10,7 +10,7 @@ const notes = ref([])
 const newNote = ref({ section: '', text: '', author: '' })
 const panelOpen = ref(false)
 const importInput = ref('')
-const showImport = ref(false)
+const showImpor = ref(false)
 const panelRef = ref(null)
 const importFileRef = ref(null)
 
@@ -23,7 +23,7 @@ const sortedNotes = computed(() =>
 const noteCount = computed(() => notes.value.length)
 
 const sectionOptions = computed(() =>
-  props.sections.length ? props.sections : ['General']
+  props.sections.length ? props.sections : ['Umum']
 )
 
 function generateUsername() {
@@ -105,7 +105,7 @@ function exportNotes() {
 }
 
 function importNotes() {
-  if (showImport.value) {
+  if (showImpor.value) {
     // Try parsing textarea content
     try {
       const parsed = JSON.parse(importInput.value)
@@ -121,21 +121,21 @@ function importNotes() {
         }
         saveNotes()
         importInput.value = ''
-        showImport.value = false
+        showImpor.value = false
       }
     } catch {
       // Invalid JSON — leave open
     }
   } else {
-    showImport.value = true
+    showImpor.value = true
   }
 }
 
-function triggerFileImport() {
+function triggerFileImpor() {
   importFileRef.value?.click()
 }
 
-function onFileImport(e) {
+function onFileImpor(e) {
   const file = e.target.files?.[0]
   if (!file) return
   const reader = new FileReader()
@@ -161,10 +161,10 @@ function formatTime(ts) {
   const d = new Date(ts)
   const now = new Date()
   const diff = now - d
-  if (diff < 60_000) return 'just now'
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`
-  if (diff < 604_800_000) return `${Math.floor(diff / 86_400_000)}d ago`
+  if (diff < 60_000) return 'baru saja'
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m lalu`
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}j lalu`
+  if (diff < 604_800_000) return `${Math.floor(diff / 86_400_000)}h lalu`
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
@@ -200,7 +200,7 @@ onMounted(() => {
             <!-- Header -->
             <div class="cn-header">
               <div class="cn-title-row">
-                <h3 class="cn-title">💬 Collaboration Notes</h3>
+                <h3 class="cn-title">💬 Catatan Kolaborasi</h3>
                 <button class="cn-close" @click="panelOpen = false" aria-label="Close notes">✕</button>
               </div>
               <div class="cn-meta">{{ noteCount }} note{{ noteCount !== 1 ? 's' : '' }} · {{ reportSlug }}</div>
@@ -213,7 +213,7 @@ onMounted(() => {
                   v-model="newNote.author"
                   type="text"
                   class="cn-field cn-author"
-                  placeholder="Your name (optional)"
+                  placeholder="Nama Anda (opsional)"
                   maxlength="30"
                 />
                 <select v-model="newNote.section" class="cn-field cn-section-select">
@@ -224,7 +224,7 @@ onMounted(() => {
                 <textarea
                   v-model="newNote.text"
                   class="cn-field cn-textarea"
-                  placeholder="Add a note… (Ctrl+Enter to submit)"
+                  placeholder="Tambah catatan… (Ctrl+Enter kirim)"
                   rows="3"
                   @keydown.ctrl.enter="addNote"
                   @keydown.meta.enter="addNote"
@@ -235,24 +235,24 @@ onMounted(() => {
                   ✏️ Post Note
                 </button>
                 <div class="cn-btn-group">
-                  <button class="cn-btn cn-btn-sm" @click="exportNotes" title="Export notes as JSON">📥 Export</button>
-                  <button class="cn-btn cn-btn-sm" @click="triggerFileImport" title="Import from JSON file">📤 Import File</button>
-                  <input ref="importFileRef" type="file" accept=".json" class="cn-file-input" @change="onFileImport" />
-                  <button class="cn-btn cn-btn-sm" @click="importNotes" :class="{ active: showImport }">{{ showImport ? '📋 Paste & Import' : '📋 Import JSON' }}</button>
+                  <button class="cn-btn cn-btn-sm" @click="exportNotes" title="Ekspor notes as JSON">📥 Ekspor</button>
+                  <button class="cn-btn cn-btn-sm" @click="triggerFileImpor" title="Impor from JSON file">📤 Impor File</button>
+                  <input ref="importFileRef" type="file" accept=".json" class="cn-file-input" @change="onFileImpor" />
+                  <button class="cn-btn cn-btn-sm" @click="importNotes" :class="{ active: showImpor }">{{ showImpor ? '📋 Paste & Impor' : '📋 Impor JSON' }}</button>
                 </div>
               </div>
 
-              <!-- Paste Import -->
-              <div v-if="showImport" class="cn-import-area">
+              <!-- Paste Impor -->
+              <div v-if="showImpor" class="cn-import-area">
                 <textarea
                   v-model="importInput"
                   class="cn-field cn-import-textarea"
-                  placeholder="Paste JSON notes here…"
+                  placeholder="Tempel JSON catatan di sini…"
                   rows="4"
                 ></textarea>
                 <div class="cn-import-actions">
-                  <button class="cn-btn cn-btn-sm" @click="importNotes">✅ Confirm Import</button>
-                  <button class="cn-btn cn-btn-sm cn-btn-cancel" @click="showImport = false; importInput = ''">Cancel</button>
+                  <button class="cn-btn cn-btn-sm" @click="importNotes">✅ Confirm Impor</button>
+                  <button class="cn-btn cn-btn-sm cn-btn-cancel" @click="showImpor = false; importInput = ''">Batal</button>
                 </div>
               </div>
             </div>
@@ -271,7 +271,7 @@ onMounted(() => {
                     <button class="cn-like-btn" :class="{ liked: note.likedByUser }" @click="likeNote(note.id)" :title="note.likedByUser ? 'Unlike' : 'Like'">
                       {{ note.likedByUser ? '❤️' : '🤍' }} {{ note.likes || '' }}
                     </button>
-                    <button class="cn-delete-btn" @click="removeNote(note.id)" title="Delete note">🗑️</button>
+                    <button class="cn-delete-btn" @click="removeNote(note.id)" title="Hapus catatan">🗑️</button>
                   </div>
                 </article>
               </TransitionGroup>
@@ -280,7 +280,7 @@ onMounted(() => {
             <!-- Empty State -->
             <div v-else class="cn-empty">
               <span class="cn-empty-icon">📝</span>
-              <p>No notes yet. Be the first to annotate!</p>
+              <p>Belum ada catatan. Jadilah yang pertama!</p>
             </div>
           </aside>
         </div>

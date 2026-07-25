@@ -5,7 +5,7 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: progressPct + '%' }"></div>
       </div>
-      <span class="progress-label">{{ progressPct }}% · {{ filledSections }}/{{ state.sections.length }} sections</span>
+      <span class="progress-label">{{ progressPct }}% · {{ filledSections }}/{{ state.bagian.length }} bagian</span>
     </div>
 
     <!-- Market Overview Bar -->
@@ -33,15 +33,15 @@
     <div class="canvas-top">
       <div>
         <h1>📐 Canvas</h1>
-        <div class="meta">{{ state.title }} · {{ state.date }} · {{ state.sections.length }} sections</div>
+        <div class="meta">{{ state.title }} · {{ state.date }} · {{ state.bagian.length }} bagian</div>
       </div>
       <div class="top-actions">
-        <span v-if="showAutoSaved" class="auto-badge">✓ Auto-saved</span>
+        <span v-if="showAutoSaved" class="auto-badge">✓ Tersimpan otomatis</span>
         <button class="btn" @click="saveCanvas" :disabled="state.saving">
-          {{ state.saving ? 'Saving…' : '💾 Save' }}
+          {{ state.saving ? 'Menyimpan…' : '💾 Simpan' }}
         </button>
-        <button class="btn" @click="showExport = true">📤 Export</button>
-        <router-link :to="`/report/${$route.params.slug}`" class="btn secondary">← Report</router-link>
+        <button class="btn" @click="showExport = true">📤 Ekspor</button>
+        <router-link :to="`/report/${$route.params.slug}`" class="btn secondary">← Laporan</router-link>
       </div>
     </div>
 
@@ -51,7 +51,7 @@
     <!-- Section list -->
     <div class="section-list">
       <div
-        v-for="(sec, idx) in state.sections"
+        v-for="(sec, idx) in state.bagian"
         :key="sec.key"
         :data-sec-key="sec.key"
         class="sec-card"
@@ -70,16 +70,16 @@
       >
         <!-- Floating toolbar -->
         <div class="sec-toolbar">
-          <button class="tb-btn" @click.stop="toggleNote(sec)" :class="{ active: noteOpen === sec.key }" title="Note">📌</button>
+          <button class="tb-btn" @click.stop="toggleNote(sec)" :class="{ active: noteOpen === sec.key }" title="Catatan">📌</button>
           <button class="tb-btn" @click.stop="toggleHidden(sec)" :class="{ active: sec.hidden }" :title="sec.hidden ? 'Show' : 'Hide'">{{ sec.hidden ? '👁️' : '🙈' }}</button>
-          <button class="tb-btn" @click.stop="deleteSection(idx)" title="Delete">🗑️</button>
-          <button class="tb-btn" @click.stop="moveSection(idx, -1)" :disabled="idx === 0" title="Move up">↑</button>
-          <button class="tb-btn" @click.stop="moveSection(idx, 1)" :disabled="idx === state.sections.length - 1" title="Move down">↓</button>
+          <button class="tb-btn" @click.stop="deleteSection(idx)" title="Hapus">🗑️</button>
+          <button class="tb-btn" @click.stop="moveSection(idx, -1)" :disabled="idx === 0" title="Naik">↑</button>
+          <button class="tb-btn" @click.stop="moveSection(idx, 1)" :disabled="idx === state.bagian.length - 1" title="Turun">↓</button>
         </div>
 
         <!-- Head -->
         <div class="sec-head">
-          <span class="drag-handle" title="Drag">⠿</span>
+          <span class="drag-handle" title="Seret">⠿</span>
           <span class="sec-num">{{ idx + 1 }}</span>
           <span class="health-dot" :class="getHealthClass(sec)" :title="getHealthTip(sec)"></span>
           <div
@@ -96,7 +96,7 @@
         <div v-if="noteOpen === sec.key" class="note-editor">
           <textarea
             v-model="sec.note"
-            placeholder="Note…"
+            placeholder="Catatan…"
             rows="2"
             @blur="closeNote(sec)"
             @keydown.esc="closeNote(sec)"
@@ -112,7 +112,7 @@
             @blur="saveEdit(sec, 'body', $event)"
             @keydown.esc="cancelEdit()"
             @dblclick="startEdit(sec, 'body')"
-            v-text="sec.body || '(empty)'"
+            v-text="sec.body || '(kosong)'"
           ></div>
         </div>
 
@@ -168,13 +168,13 @@
 
     <!-- Hidden bar -->
     <div v-if="hiddenCount" class="hidden-bar">
-      🙈 {{ hiddenCount }} hidden · <button class="link-btn" @click="showAll">Show all</button>
+      🙈 {{ hiddenCount }} hidden · <button class="link-btn" @click="showAll">Tampilkan semua</button>
     </div>
 
     <!-- Export modal -->
     <div v-if="showExport" class="modal-overlay" @click.self="showExport = false">
       <div class="modal">
-        <h2>📤 Export</h2>
+        <h2>📤 Ekspor</h2>
         <div class="export-formats">
           <button
             v-for="fmt in formats"
@@ -190,7 +190,7 @@
         </div>
         <div class="modal-actions">
           <button class="btn" @click="doExport" :disabled="state.exporting">
-            {{ state.exporting ? 'Exporting…' : 'Export' }}
+            {{ state.exporting ? 'Mengekspor…' : 'Export' }}
           </button>
           <button class="btn secondary" @click="showExport = false">Cancel</button>
         </div>
@@ -233,7 +233,7 @@ const state = reactive({
   toastType: 'info',
   title: '',
   date: '',
-  sections: [],
+  bagian: [],
   error: null,
   exportError: null,
   _origMap: {},
@@ -275,13 +275,13 @@ async function loadMarketData() {
 }
 
 // ── Computed ─────────────────────────────────────────────────
-const hiddenCount = computed(() => state.sections.filter(s => s.hidden).length)
+const hiddenCount = computed(() => state.bagian.filter(s => s.hidden).length)
 const filledSections = computed(() =>
-  state.sections.filter(s => s.body || (s.items && s.items.length)).length
+  state.bagian.filter(s => s.body || (s.items && s.items.length)).length
 )
 const progressPct = computed(() =>
-  state.sections.length
-    ? Math.round((filledSections.value / state.sections.length) * 100)
+  state.bagian.length
+    ? Math.round((filledSections.value / state.bagian.length) * 100)
     : 0
 )
 
@@ -295,7 +295,7 @@ function showToast(msg, type = 'info') {
 
 // ── Dirty / Auto-save ───────────────────────────────────────
 function markDirty() {
-  if (state.sections.length === 0) return
+  if (state.bagian.length === 0) return
   dirty = true
   clearTimeout(autoTimer)
   autoTimer = setTimeout(() => {
@@ -362,20 +362,20 @@ function toggleHidden(sec) {
 }
 
 function showAll() {
-  state.sections.forEach(s => { s.hidden = false })
+  state.bagian.forEach(s => { s.hidden = false })
   markDirty()
 }
 
 function deleteSection(idx) {
-  state.sections.splice(idx, 1)
-  if (activeIdx.value >= state.sections.length) activeIdx.value = state.sections.length - 1
+  state.bagian.splice(idx, 1)
+  if (activeIdx.value >= state.bagian.length) activeIdx.value = state.bagian.length - 1
   markDirty()
 }
 
 function moveSection(idx, dir) {
   const target = idx + dir
-  if (target < 0 || target >= state.sections.length) return
-  const s = state.sections
+  if (target < 0 || target >= state.bagian.length) return
+  const s = state.bagian
   const [moved] = s.splice(idx, 1)
   s.splice(target, 0, moved)
   activeIdx.value = target
@@ -398,10 +398,10 @@ function onDragOver(e, idx) {
 function onDrop(e, idx) {
   const from = dragIdx.value
   if (from < 0 || from === idx) return
-  const s = [...state.sections]
+  const s = [...state.bagian]
   const [moved] = s.splice(from, 1)
   s.splice(idx, 0, moved)
-  state.sections = s
+  state.bagian = s
   activeIdx.value = idx
   dragIdx.value = -1
   markDirty()
@@ -519,7 +519,7 @@ function renderAllSparklines() {
     // Section sparklines
     document.querySelectorAll('[data-spk]').forEach(el => {
       const key = el.getAttribute('data-spk')
-      const sec = state.sections.find(s => s.key === key)
+      const sec = state.bagian.find(s => s.key === key)
       if (!sec || !sec.items) return
       let best = []
       for (const item of sec.items) {
@@ -536,7 +536,7 @@ function renderAllSparklines() {
     document.querySelectorAll('[data-ispk]').forEach(el => {
       const key = el.getAttribute('data-ispk')
       const [secKey, itemIdx] = key.split('-')
-      const sec = state.sections.find(s => s.key === secKey)
+      const sec = state.bagian.find(s => s.key === secKey)
       if (!sec || !sec.items) return
       const item = sec.items[parseInt(itemIdx)]
       if (!item || !item.sparkline) return
@@ -637,7 +637,7 @@ function handleKeydown(e) {
     return
   }
 
-  const len = state.sections.length
+  const len = state.bagian.length
   switch (e.key) {
     case 'j':
     case 'ArrowDown':
@@ -653,7 +653,7 @@ function handleKeydown(e) {
       break
     case 'Enter':
       e.preventDefault()
-      startEdit(state.sections[activeIdx.value], 'title')
+      startEdit(state.bagian[activeIdx.value], 'title')
       break
     case 'Escape':
       cancelEdit()
@@ -667,14 +667,14 @@ function handleKeydown(e) {
     case 'h':
       if (e.ctrlKey || e.metaKey) return
       e.preventDefault()
-      const sec = state.sections[activeIdx.value]
+      const sec = state.bagian[activeIdx.value]
       if (sec) toggleHidden(sec)
       break
   }
 }
 
 function scrollSection() {
-  const sec = state.sections[activeIdx.value]
+  const sec = state.bagian[activeIdx.value]
   if (!sec) return
   const el = document.querySelector(`[data-sec-key="${sec.key}"]`)
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -691,12 +691,12 @@ async function doSave(opts = {}) {
   if (state.saving) return
   state.saving = true
   try {
-    const sectionOrder = state.sections.map(s => s.key)
+    const sectionOrder = state.bagian.map(s => s.key)
     const overrides = {}
     const notes = {}
     const hiddenSections = []
 
-    state.sections.forEach(sec => {
+    state.bagian.forEach(sec => {
       const o = {}
       const orig = state._origMap?.[sec.key]
       if (sec.title !== orig?.title) o.title = sec.title
@@ -718,7 +718,7 @@ async function doSave(opts = {}) {
 
     // Refresh orig map
     state._origMap = {}
-    state.sections.forEach(sec => {
+    state.bagian.forEach(sec => {
       state._origMap[sec.key] = { title: sec.title, body: sec.body, items: sec.items ? [...sec.items] : [], funFact: sec.funFact }
     })
 
@@ -786,9 +786,9 @@ onMounted(async () => {
     const data = await res.json()
     state.title = data.title
     state.date = data.date
-    state.sections = data.sections || []
+    state.bagian = data.bagian || []
     state._origMap = {}
-    state.sections.forEach(sec => {
+    state.bagian.forEach(sec => {
       state._origMap[sec.key] = {
         title: sec.title,
         body: sec.body,
@@ -815,9 +815,9 @@ onBeforeUnmount(() => {
   chartInstances.clear()
 })
 
-// Watch sections changes → re-render sparklines
+// Watch bagian changes → re-render sparklines
 watch(
-  () => state.sections.map(s => s.key + s.hidden + (s.items ? s.items.length : 0)).join(','),
+  () => state.bagian.map(s => s.key + s.hidden + (s.items ? s.items.length : 0)).join(','),
   () => {
     nextTick(() => renderAllSparklines())
   }

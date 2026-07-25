@@ -1,10 +1,10 @@
 <template>
   <main class="dash">
     <section class="hero">
-      <p class="kicker">Ops</p>
-      <h1>Delivery Health</h1>
-      <p>Status report, file deliverables, Discord delivery log, retry queue.</p>
-      <button @click="generate" :disabled="loading">{{ loading ? 'Generating…' : 'Generate + Send Report' }}</button>
+      <p class="kicker">Operasional</p>
+      <h1>Status Pengiriman</h1>
+      <p>Status laporan, file deliverable, log pengiriman Discord, antrean retry.</p>
+      <button @click="generate" :disabled="loading">{{ loading ? 'Membuat…' : 'Buat + Kirim Laporan' }}</button>
     </section>
 
     <!-- Health Status Cards -->
@@ -12,7 +12,7 @@
       <div class="hc overall" :class="'hc-' + health.overall_status">
         <div class="hc-dot" :class="'dot-' + health.overall_status"></div>
         <div class="hc-body">
-          <span class="hc-label">System</span>
+          <span class="hc-label">Sistem</span>
           <span class="hc-value">{{ health.overall_status.toUpperCase() }}</span>
           <span class="hc-reason">{{ health.overall_reason }}</span>
         </div>
@@ -20,23 +20,23 @@
       <div class="hc">
         <div class="hc-icon">📋</div>
         <div class="hc-body">
-          <span class="hc-label">Last Report</span>
-          <span class="hc-value">{{ health.report_age_hours != null ? health.report_age_hours + 'h ago' : '—' }}</span>
-          <span class="hc-reason">{{ health.total_reports }} total report(s)</span>
+          <span class="hc-label">Laporan Terakhir</span>
+          <span class="hc-value">{{ health.report_age_hours != null ? health.report_age_hours + 'j lalu' : '—' }}</span>
+          <span class="hc-reason">{{ health.total_reports }} total laporan</span>
         </div>
       </div>
       <div class="hc">
         <div class="hc-icon">🚀</div>
         <div class="hc-body">
-          <span class="hc-label">Delivery Rate</span>
+          <span class="hc-label">Tingkat Pengiriman</span>
           <span class="hc-value" :class="deliveryRateClass">{{ health.delivery_success_rate != null ? health.delivery_success_rate + '%' : '—' }}</span>
-          <span class="hc-reason">last {{ health.delivery_sample_size }} attempts</span>
+          <span class="hc-reason">{{ health.delivery_sample_size }} percobaan terakhir</span>
         </div>
       </div>
       <div class="hc">
         <div class="hc-icon">📦</div>
         <div class="hc-body">
-          <span class="hc-label">Deliverables</span>
+          <span class="hc-label">Deliverable</span>
           <span class="hc-value" :class="deliverablesClass">{{ health.deliverables_ok }}/{{ health.deliverables_total }}</span>
           <span class="hc-reason">html · json · md · card</span>
         </div>
@@ -44,9 +44,9 @@
       <div class="hc">
         <div class="hc-icon">📬</div>
         <div class="hc-body">
-          <span class="hc-label">Queue</span>
-          <span class="hc-value" :class="queueClass">{{ health.queue_pending + health.queue_failed + health.queue_queued }} items</span>
-          <span class="hc-reason">{{ health.queue_pending }} pending · {{ health.queue_failed }} failed · {{ health.queue_queued }} queued</span>
+          <span class="hc-label">Antrean</span>
+          <span class="hc-value" :class="queueClass">{{ health.queue_pending + health.queue_failed + health.queue_queued }} item</span>
+          <span class="hc-reason">{{ health.queue_pending }} tertunda · {{ health.queue_failed }} gagal · {{ health.queue_queued }} diantrekan</span>
         </div>
       </div>
     </section>
@@ -54,31 +54,31 @@
     <!-- Existing sections -->
     <section v-if="data" class="grid">
       <article class="panel">
-        <h2>Latest</h2>
+        <h2>Terbaru</h2>
         <b>{{ data.latest_report }}</b>
-        <p><a :href="data.local" target="_blank">Local</a> · <a :href="data.tailscale" target="_blank">Tailscale</a></p>
+        <p><a :href="data.local" target="_blank">Lokal</a> · <a :href="data.tailscale" target="_blank">Tailscale</a></p>
       </article>
       <article class="panel">
-        <h2>Deliverables</h2>
-        <p v-for="(v, k) in data.deliverables" :key="k"><b>{{ k }}</b>: {{ v ? '✅ OK' : '❌ MISSING' }}</p>
+        <h2>Deliverable</h2>
+        <p v-for="(v, k) in data.deliverables" :key="k"><b>{{ k }}</b>: {{ v ? '✅ OK' : '❌ HILANG' }}</p>
       </article>
     </section>
 
     <section class="panel" v-if="data">
-      <h2>Send Queue</h2>
+      <h2>Antrean Kirim</h2>
       <div class="summary">
         <span v-for="x in queueSummary" :key="x.status" :class="x.status">{{ x.status }}: {{ x.count }}</span>
-        <span v-if="!queueSummary.length" class="ok">empty</span>
+        <span v-if="!queueSummary.length" class="ok">kosong</span>
       </div>
       <div class="log queue" v-for="x in queueRows" :key="x.id">
         <b>#{{ x.id }} {{ x.step }}</b>
         <span :class="x.status">{{ x.status }}</span>
-        <small>{{ x.channel }} · {{ x.slug }} · attempts {{ x.attempts }} · next {{ x.next_attempt_at || '-' }} · {{ x.last_error || 'no error' }}</small>
+        <small>{{ x.channel }} · {{ x.slug }} · {{ x.attempts }} percobaan · berikut {{ x.next_attempt_at || '-' }} · {{ x.last_error || 'tanpa error' }}</small>
       </div>
     </section>
 
     <section class="panel" v-if="data">
-      <h2>Delivery Log</h2>
+      <h2>Log Pengiriman</h2>
       <div class="log" v-for="x in data.delivery" :key="x.step + x.created_at">
         <b>{{ x.step }}</b>
         <span :class="x.status">{{ x.status }}</span>
