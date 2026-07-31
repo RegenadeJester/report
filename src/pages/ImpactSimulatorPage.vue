@@ -2,8 +2,8 @@
   <main class="impact-page">
     <section class="hero">
       <p class="kicker">Market Orca Lab</p>
-      <h1>Impact Simulator</h1>
-      <p>Simulasikan dampak event pasar ke watchlist: bull/base/bear, risk level, dan sinyal yang perlu dipantau.</p>
+      <h1>Simulator Dampak</h1>
+      <p>Simulasikan dampak event pasar ke watchlist: bullish/bearish/netral, tingkat risiko, dan sinyal yang perlu dipantau.</p>
     </section>
 
     <section class="panel controls">
@@ -25,13 +25,13 @@
           <option value="watchlist">Hanya watchlist</option>
         </select>
       </label>
-      <label>Severity {{ severity }}x
+      <label>Severitas {{ severity }}x
         <input v-model="severity" type="range" min="0.25" max="3" step="0.25" />
       </label>
-      <label>Probability {{ Math.round(probability*100) }}%
+      <label>Probabilitas {{ Math.round(probability*100) }}%
         <input v-model="probability" type="range" min="0.05" max="1" step="0.05" />
       </label>
-      <label class="wide">Custom event
+      <label class="wide">Event kustom
         <input v-model="customEvent" placeholder="contoh: BI rate hike dan rupiah stress" />
       </label>
       <button @click="simulate" :disabled="loading">{{ loading ? 'Menjalankan…' : 'Jalankan Simulasi' }}</button>
@@ -52,7 +52,7 @@
     </section>
 
     <section v-if="result" class="cards">
-      <article v-for="item in result.items" :key="item.slug" class="card" :class="item.direction">
+      <article v-for="item in result.items" :key="item.slug" class="card" :class="dirClass(item.direction)">
         <div>
           <b>{{ item.symbol }}</b>
           <small>{{ item.name }}</small>
@@ -63,13 +63,13 @@
             <div class="bar-fill bar-bullish" :style="{ width: bullishPct(item.impact_score) }"></div>
             <div class="bar-fill bar-bearish" :style="{ width: bearishPct(item.impact_score) }"></div>
           </div>
-          <span class="bar-label">{{ item.direction }}</span>
+          <span class="bar-label">{{ dirLabel(item.direction) }}</span>
         </div>
-        <p>{{ item.risk_level }} risk · {{ item.kind }}</p>
+        <p>{{ riskLabel(item.risk_level) }} · {{ item.kind }}</p>
         <ul>
-          <li><b>Bull:</b> {{ item.bull }}</li>
-          <li><b>Base:</b> {{ item.base }}</li>
-          <li><b>Bear:</b> {{ item.bear }}</li>
+          <li><b>Bullish:</b> {{ item.bull }}</li>
+          <li><b>Dasar:</b> {{ item.base }}</li>
+          <li><b>Bearish:</b> {{ item.bear }}</li>
         </ul>
       </article>
     </section>
@@ -98,8 +98,15 @@ async function simulate(){
   try{
     const res = await fetch('/api/impact-simulator',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:eventType.value,timeframe:timeframe.value,scope:scope.value,severity:Number(severity.value),probability:Number(probability.value),custom_event_text:customEvent.value})})
     result.value = await res.json()
-  } finally { loading.value = false }
+  } catch(e) {
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
 }
+function dirClass(d){ return d === 'netral' ? 'neutral' : d }
+function dirLabel(d){ return d === 'bullish' ? 'Bullish' : d === 'bearish' ? 'Bearish' : 'Netral' }
+function riskLabel(r){ return r === 'tinggi' ? 'Risiko tinggi' : r === 'sedang' ? 'Risiko sedang' : 'Risiko rendah' }
 async function copyMd(){ if(result.value?.markdown) await navigator.clipboard.writeText(result.value.markdown) }
 function bullishPct(s){ return Math.max(2, Math.min(100, s > 0 ? s/(s+1)*100 : 0))+'%' }
 function bearishPct(s){ return Math.max(2, Math.min(100, s < 0 ? Math.abs(s)/(Math.abs(s)+1)*100 : 0))+'%' }
